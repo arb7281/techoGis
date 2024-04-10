@@ -1,8 +1,8 @@
-import {createSlice} from "@redux/toolkit"
+import {createSlice} from "@reduxjs/toolkit"
 
 const initialState = {
     categories: null,
-    product: localStorage.getItem("product") ? JSON.parse(localStorage.getItem("product")) : null
+    product: null
 }
 
 const productsSlice = createSlice({
