@@ -14,6 +14,7 @@ app.use(
 )
 
 app.get('/', (req, res) => {
+    console.log("/ route triggered")
     return res.json({
         success: true,
         message: "server is up and running"
