@@ -1,3 +1,3 @@
-# React & Tailwind CSS Starter Pack
+# TechoGis Assignment
 
 heloooo
