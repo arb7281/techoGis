@@ -12,6 +12,11 @@ const userSchema = new mongoose.Schema(
             required: true,
             trim: true
         },
+        companyName:{
+            type: String,
+            required: true,
+            trim: true
+        },
         phoneNumber:{
             type: Number,
             required: true,
@@ -24,6 +29,9 @@ const userSchema = new mongoose.Schema(
         password:{
             type: String,
             required: true
+        },
+        token:{
+            type: String
         },
         remarks:{
             type:String,
