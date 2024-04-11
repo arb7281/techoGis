@@ -2,18 +2,19 @@ import React, { useEffect, useState } from 'react'
 import { setCategories } from '../slices/productsSlice';
 import { useDispatch, useSelector } from "react-redux"
 import { fetchCategories } from '../services/operations/fetchCategoryAPI';
+import { setLoading } from '../slices/productsSlice';
 
 const Sidebar = () => {
 
   const dispatch = useDispatch()
-  const {categories} = useSelector((state) => state.products)
+  const {categories, loading} = useSelector((state) => state.products)
   // const [categories, setCategories] = useState([])
   console.log("printing categories", categories)
 
   useEffect(() =>{
     const getCategories = async() =>{
       try{
-        const res = await fetchCategories()
+        const res = await fetchCategories(dispatch, setLoading)
         dispatch(setCategories(res))
       }catch(error){
         console.log("could not fetched categories", error)
@@ -27,7 +28,10 @@ const Sidebar = () => {
 
   return (
     <div className="col-xl-4 col-lg-4 col-md-12 col-sm-12 col-12">
-                <div className="card card-product">
+      {
+        loading ? (<div>Loading....</div>)
+      
+                : <div className="card card-product">
                     <div className="card-body">
                         <ul className="list-group list-group-flush">
 
@@ -54,6 +58,7 @@ const Sidebar = () => {
                           </ul>
                     </div>
                 </div>
+      }        
             </div>
   )
 }
