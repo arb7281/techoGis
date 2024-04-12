@@ -39,7 +39,7 @@ exports.getMatchedCategoryProduct = async (req, res) => {
 exports.getAllProduct = async (req, res) => {
     try{
 
-        const products = await Product.find().sort({Category: -1})
+        const products = await Product.find().sort({Category: 1})
 
         if (!products) {
             console.log("products not found")
