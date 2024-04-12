@@ -3,7 +3,8 @@ import {createSlice} from "@reduxjs/toolkit"
 const initialState = {
     selectedChemistry: '',
     selectedProcess: '',
-    selectedCategory: ''
+    selectedCategory: '',
+    keyWordSearch: ''
 }
 
 const filterSlice = createSlice({
@@ -18,10 +19,13 @@ const filterSlice = createSlice({
         },
         setSelectedCategory(state, value){
             state.selectedCategory = value.payload
+        },
+        setKeyWordSearch(state, value){
+            state.keyWordSearch = value.payload
         }
     }
 })
 
-export const {setSelectedChemistry, setSelectedProcess, setSelectedCategory} = filterSlice.actions
+export const {setSelectedChemistry, setSelectedProcess, setSelectedCategory, setKeyWordSearch} = filterSlice.actions
 
 export default filterSlice.reducer

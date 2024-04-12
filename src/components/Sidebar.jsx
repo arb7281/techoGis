@@ -30,8 +30,8 @@ const Sidebar = () => {
                         <ul className="list-group list-group-flush">
 
                         {
-                          uniqueCategories?.map((category) =>(
-                             <li key={category._id} 
+                          uniqueCategories?.map((category, index) =>(
+                             <li key={index} 
                              className={`list-group-item ${category === activeCategory ? 'active' : ''}`}
                              onClick={() => handleClick(category)}><Link to={`/categories/${category}`}>{category}</Link></li>
                              )

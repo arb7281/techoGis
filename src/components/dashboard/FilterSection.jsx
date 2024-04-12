@@ -1,12 +1,11 @@
 import React, { useState, useEffect } from 'react'
 import {useSelector, useDispatch} from "react-redux"
-import { setSelectedChemistry } from '../../slices/filterSlice';
-import { setSelectedProcess } from '../../slices/filterSlice';
+import { setSelectedChemistry, setSelectedProcess, setKeyWordSearch } from '../../slices/filterSlice';
 // import  from "react-redux"
 
 const FilterSection = () => {
 
-    const {selectedChemistry, selectedProcess, selectedCategory} = useSelector((state) => state.filter)
+    const {selectedChemistry, selectedProcess, selectedCategory, keyWordSearch} = useSelector((state) => state.filter)
     const [uniqueProcesses, setUniqueProcesses] = useState([]);
 
     const dispatch = useDispatch()
@@ -29,7 +28,7 @@ const FilterSection = () => {
     useEffect(() => {
         // Filter unique processes based on the selected chemistry
         const processes = allProducts
-            .filter(item => item.Chemistry === selectedChemistry)
+            ?.filter(item => item.Chemistry === selectedChemistry)
             .map(item => item.Process);
         setUniqueProcesses([...new Set(processes)]);
     }, [selectedChemistry, allProducts]);
@@ -37,6 +36,10 @@ const FilterSection = () => {
     const uniqueChemistries = selectedCategory
         ? [...new Set(allProducts?.filter((item) => item.Category === selectedCategory).map(item => item.Chemistry))]
         : [...new Set(allProducts?.map(item => item.Chemistry))];
+    
+        const handleSearchChange = (keyword) => {
+            dispatch(setKeyWordSearch(keyword));
+          };
 
   return (
     
@@ -73,7 +76,8 @@ const FilterSection = () => {
                                     <div className="col-xl-4 col-lg-4 col-md-8 col-sm-12 col-12">
                                         <div className="form-group">
                                             <label className="form-label" for="Filter_by_Chemistry">Search Keyword</label>
-                                            <input type="text" name="" id="" placeholder="Search here..." className="form-control"/>
+                                            <input type="text" placeholder="Search here..." onChange={(e) => handleSearchChange(e.target.value)} className="form-control"/>
+                                            {/* <input type="text" name="" id="" placeholder="Search here..." className="form-control"/> */}
                                         </div>
                                     </div>
                                 </form>
