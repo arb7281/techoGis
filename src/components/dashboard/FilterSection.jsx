@@ -1,7 +1,45 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
+import {useSelector, useDispatch} from "react-redux"
+import { setSelectedChemistry } from '../../slices/filterSlice';
+import { setSelectedProcess } from '../../slices/filterSlice';
+// import  from "react-redux"
 
 const FilterSection = () => {
+
+    const {selectedChemistry, selectedProcess, selectedCategory} = useSelector((state) => state.filter)
+    const [uniqueProcesses, setUniqueProcesses] = useState([]);
+
+    const dispatch = useDispatch()
+
+    const {allProducts} = useSelector((state) => state.products)
+
+    
+    // const uniqueProcesses = [...new Set(product?.map(item => item.Process))];
+
+    const handleChemistryChange = (event) => {
+        const selectedChem = event.target.value;
+        dispatch(setSelectedChemistry(selectedChem));
+    };
+
+    useEffect(() => {
+        dispatch(setSelectedChemistry(null))
+        dispatch(setSelectedProcess(null))
+    },[selectedCategory])
+
+    useEffect(() => {
+        // Filter unique processes based on the selected chemistry
+        const processes = allProducts
+            .filter(item => item.Chemistry === selectedChemistry)
+            .map(item => item.Process);
+        setUniqueProcesses([...new Set(processes)]);
+    }, [selectedChemistry, allProducts]);
+
+    const uniqueChemistries = selectedCategory
+        ? [...new Set(allProducts?.filter((item) => item.Category === selectedCategory).map(item => item.Chemistry))]
+        : [...new Set(allProducts?.map(item => item.Chemistry))];
+
   return (
+    
     <div className="col-12 mb-4">
                         <div className="card filter-card">
                             <div className="card-body">
@@ -9,25 +47,26 @@ const FilterSection = () => {
                                     <div className="col-xl-4 col-lg-4 col-md-8 col-sm-12 col-12">
                                         <div className="form-group">
                                             <label className="form-label" for="Filter_by_Chemistry">Filter by Chemistry <span className="text-danger">*</span></label>
-                                            <select name="" id="Filter_by_Chemistry" className="form-select">
+                                            <select name="" id="Filter_by_Chemistry" className="form-select" value={selectedChemistry} onChange={(e) => handleChemistryChange(e)} >
 												<option>Select Chemistry</option>
-                                                <option value="">Chemistry 1</option>
-                                                <option value="">Chemistry 2</option>
-                                                <option value="">Chemistry 3</option>
+                                                {
+                                                    uniqueChemistries?.map((chemistry, index) =>{
+                                                        return <option key={index} value={chemistry}>{chemistry}</option>
+                                                    })
+                                                }
                                             </select>
                                         </div>
                                     </div>
                                     <div className="col-xl-4 col-lg-4 col-md-8 col-sm-12 col-12">
                                         <div className="form-group">
                                             <label className="form-label" for="Filter_by_Chemistry">Filter by Process</label>
-                                            <select name="" id="Filter_by_Chemistry" className="form-select">
+                                            <select name="" id="Filter_by_Chemistry" className="form-select" value={selectedProcess} onChange={(e) => dispatch(setSelectedProcess(e.target.value))}>
 												<option>Select Process</option>
-                                                <option value="">Process 1.1</option>
-                                                <option value="">Process 1.2</option>
-                                                <option value="">Process 2.1</option>
-                                                <option value="">Process 2.2</option>
-                                                <option value="">Process 3.1</option>
-                                                <option value="">Process 3.2</option>
+                                                {
+                                                    uniqueProcesses?.map((process, index) =>{
+                                                        return <option key={index} value={process}>{process}</option>
+                                                    })
+                                                }
                                             </select>
                                         </div>
                                     </div>
@@ -40,6 +79,7 @@ const FilterSection = () => {
                                 </form>
                             </div>
                         </div>
+                        
                     </div>
   )
 }

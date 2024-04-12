@@ -30,9 +30,6 @@ const userSchema = new mongoose.Schema(
             type: String,
             required: true
         },
-        token:{
-            type: String
-        },
         remarks:{
             type:String,
             required: true,

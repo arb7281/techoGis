@@ -1,29 +1,23 @@
-import React, { useEffect, useState } from 'react'
-import { setCategories } from '../slices/productsSlice';
+import React, { useState } from 'react'
 import { useDispatch, useSelector } from "react-redux"
-import { fetchCategories } from '../services/operations/fetchCategoryAPI';
-import { setLoading } from '../slices/productsSlice';
+import { Link, useLocation } from 'react-router-dom';
+import { setSelectedCategory } from '../slices/filterSlice';
 
 const Sidebar = () => {
 
   const dispatch = useDispatch()
-  const {categories, loading} = useSelector((state) => state.products)
-  // const [categories, setCategories] = useState([])
-  console.log("printing categories", categories)
+  const {allProducts, loading} = useSelector((state) => state.products)
+  const [activeCategory, setActiveCategory] = useState(null);
+  const uniqueCategories = [...new Set(allProducts?.map(item => item.Category))]
 
-  useEffect(() =>{
-    const getCategories = async() =>{
-      try{
-        const res = await fetchCategories(dispatch, setLoading)
-        dispatch(setCategories(res))
-      }catch(error){
-        console.log("could not fetched categories", error)
-      }
-      
-    }
+  const location = useLocation()
 
-    getCategories()
-  }, [])
+  async function handleClick(category){
+    setActiveCategory(category)
+    
+    dispatch(setSelectedCategory(category))
+    
+  }
 
 
   return (
@@ -36,25 +30,14 @@ const Sidebar = () => {
                         <ul className="list-group list-group-flush">
 
                         {
-                          categories?.map((category) =>(
-                             <li key={category._id} className="list-group-item"><a href="/">{category.Category}</a></li>
+                          uniqueCategories?.map((category) =>(
+                             <li key={category._id} 
+                             className={`list-group-item ${category === activeCategory ? 'active' : ''}`}
+                             onClick={() => handleClick(category)}><Link to={`/categories/${category}`}>{category}</Link></li>
                              )
                           )
                         }
-                            {/* <li className="list-group-item"><a href="/">Gelcoats</a></li>
-                            <li className="list-group-item"><a href="/">Solid Surface Resins</a></li>
-                            <li className="list-group-item active"><a href="/">Vinyl Ester Resins</a></li>
-                            <li className="list-group-item"><a href="/">Resins for Compression Moulding</a></li>
-                            <li className="list-group-item"><a href="/">Resins Infusion Moulding</a></li>
-                            <li className="list-group-item"><a href="/">LSE Resins</a></li>
-                            <li className="list-group-item"><a href="/">Resins Open Mould</a></li>
-                            <li className="list-group-item"><a href="/">Resins RTM</a></li>
-                            <li className="list-group-item"><a href="/">Resins Pultrusion</a></li>
-                            <li className="list-group-item"><a href="/">Bonding Paste & Corner Filling Compound</a></li>
-                            <li className="list-group-item"><a href="/">Resins Filament Winding</a></li>
-                            <li className="list-group-item"><a href="/">Flame Retardant Resins</a></li>
-                            <li className="list-group-item"><a href="/">Resins for Engineered Stone and Composite Marble</a></li>
-                            <li className="list-group-item"><a href="/">Tooling System</a></li> */}
+
                           </ul>
                     </div>
                 </div>

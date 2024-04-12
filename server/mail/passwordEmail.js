@@ -1,4 +1,4 @@
-const passwordTemplate = (password) => {
+exports.passwordTemplate = (password) => {
 	return `<!DOCTYPE html>
 	<html>
 	
@@ -77,4 +77,3 @@ const passwordTemplate = (password) => {
 	
 	</html>`;
 };
-module.exports = passwordTemplate;

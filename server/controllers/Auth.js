@@ -1,9 +1,9 @@
 const bcrypt = require("bcrypt")
 const User = require("../models/User")
-const jwt = require("jsonwebtoken")
+// const jwt = require("jsonwebtoken")
 require("dotenv").config()
 const mailSender = require("../utils/mailSender")
-const {passwordEmail} = require("../mail/passwordEmail")
+const {passwordTemplate} = require("../mail/passwordEmail")
 
 
 exports.signup = async (req, res) => {
@@ -16,6 +16,8 @@ exports.signup = async (req, res) => {
             email,
             remarks
         } = req.body
+
+        console.log("printing all fields", req.body)
 
         if(!name || 
            !companyName || 
@@ -55,7 +57,7 @@ exports.signup = async (req, res) => {
         const emailResponse = await mailSender(
             email,
             `Password generated successfully`,
-            passwordEmail(password)
+            passwordTemplate(password)
         );
 
         const user = await User.create({
@@ -86,6 +88,7 @@ exports.signup = async (req, res) => {
 exports.login = async (req, res) =>{
     try{
         const {email, password} = req.body
+        console.log("printing body in login", req.body)
         if(!email || !password){
             return res.status(400).json({
                 success: false,
@@ -94,6 +97,7 @@ exports.login = async (req, res) =>{
         }
 
         const user = await User.findOne({email})
+        console.log("")
 
         if(!user){
             return res.status(401).json({
@@ -102,27 +106,13 @@ exports.login = async (req, res) =>{
             })
         }
 
+        
         if(await bcrypt.compare(password, user.password)){
-            const token = jwt.sign(
-                {email: user.email, id: user._id},
-                process.env.JWT_SECRET,
-            {
-                expiresIn: "24h"
-            })
-
-            user.token = token
             user.password = undefined
-
-            const options = {
-                expires: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000),
-                httpOnly: true
-            }
-
-            res.cookie("token", token, options).status(200).json({
+            return res.status(200).json({
                 success: true,
-                token,
-                user,
-                message: `Login Successfull`
+                message: "user logged in successfully",
+                data:user
             })
         }else{
             return res.status(401).json({
@@ -131,6 +121,7 @@ exports.login = async (req, res) =>{
 			});
         } 
     }catch(error){
+        console.log("printing error", error)
         return res.status(500).json({
             success: false,
             message: "Login Failed"

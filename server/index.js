@@ -4,6 +4,8 @@ const database = require("./config/database")
 require("dotenv").config()
 const cors = require("cors")
 const categoryRoutes = require("./routes/Category")
+const productRoutes = require("./routes/Product")
+const userRoutes = require("./routes/User")
 
 database.connect()
 app.use(express.json())
@@ -15,6 +17,8 @@ app.use(
 )
 
 app.use("/api/v1/products", categoryRoutes)
+app.use("/api/v1/categoryProducts", productRoutes)
+app.use("/api/v1/auth", userRoutes)
 
 
 app.get('/', (req, res) => {
