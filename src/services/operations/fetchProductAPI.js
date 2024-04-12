@@ -28,6 +28,7 @@ export const fetchAllProducts = async (dispatch, setAllProducts) =>{
     if (!response?.data?.success) {
         throw new Error("Could Not Fetch Products");
     }
+
     dispatch(setAllProducts(response?.data?.data))
     } catch (error) {
     console.log("", error);
